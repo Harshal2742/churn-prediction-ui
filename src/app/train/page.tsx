@@ -1,9 +1,12 @@
+'use client';
+
+import PredictSingleValue from '@/components/predict/PredictSingleValue';
 import { Grid, Typography } from '@mui/material';
 
 const TrainModel = () => {
 	return (
 		<Grid>
-			<Typography>{'Train model'}</Typography>
+			<PredictSingleValue />
 		</Grid>
 	);
 };
