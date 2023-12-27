@@ -4,6 +4,7 @@ import { Tabs, Tab } from '@mui/material';
 import { useState } from 'react';
 import { TabContext, TabPanel } from '@mui/lab';
 import PredictSingleValue from '../../components/predict/PredictSingleValue';
+import PredictMultipleValues from '@/components/predict/PredictMultipleValues';
 
 const PredictChurn = () => {
 	const [activeTab, setActiveTab] = useState(0);
@@ -33,7 +34,7 @@ const PredictChurn = () => {
 				<PredictSingleValue />
 			</TabPanel>
 			<TabPanel value={'1'}>
-				<PredictSingleValue />
+				<PredictMultipleValues />
 			</TabPanel>
 		</TabContext>
 	);
