@@ -1,24 +1,32 @@
+'use client';
 import {
 	AppBar,
+	Avatar,
 	Box,
 	Button,
 	Divider,
 	Drawer,
 	Grid,
+	IconButton,
 	List,
 	ListItem,
 	ListItemButton,
+	Menu,
+	MenuItem,
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './Layout.module.css';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { useRouter } from 'next/navigation';
+import { setUser } from '@/store/user-slice';
 
 const TABS = [
 	{
 		title: 'Model information',
-		link: '/',
+		link: '/model-information',
 	},
 	{
 		title: 'Predict churn',
@@ -36,8 +44,44 @@ const TABS = [
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	const drawerWidth = 240;
-
 	const [activeTab, setActiveTab] = useState(0);
+	const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+	const router = useRouter();
+	const [menuOpen, setMenuOpen] = useState(false);
+	const dispath = useAppDispatch();
+
+	const onProfileClick = () => {
+		setMenuOpen(true);
+	};
+
+	const handelMenuClose = () => {
+		setMenuOpen(false);
+	};
+
+	useEffect(() => {
+		if (!isAuthenticated) {
+			router.replace('/auth');
+		}
+	}, [isAuthenticated, router]);
+
+	if (!isAuthenticated) {
+		return <Box>{children}</Box>;
+	}
+
+	const onLogout = () => {
+		setMenuOpen(false);
+		dispath(
+			setUser({
+				isAuthenticated: false,
+				user: {
+					email: '',
+					role: '',
+				},
+			})
+		);
+		router.replace('/auth');
+	};
+
 	return (
 		<Box display={'flex'} overflow={'hidden'}>
 			<Drawer
@@ -100,18 +144,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 					overflow: 'hidden',
 				}}
 			>
-				<AppBar position="relative">
-					<Toolbar sx={{ justifyContent: 'right' }}>
+				<AppBar>
+					<Toolbar sx={{ justifyContent: 'right', position: 'relative' }}>
+						<IconButton id="basic-button">
+							<Avatar />
+						</IconButton>
 						<Button
-							variant="contained"
-							sx={{
-								borderRadius: '5rem',
-								textTransform: 'unset',
-							}}
+							variant="outlined"
+							sx={{ textTransform: 'unset', fontSize: '1.6rem' }}
+							onClick={onLogout}
 						>
-							<Typography fontSize={'1.6rem'} fontWeight={'700'}>
-								{'Sign in'}
-							</Typography>
+							Logout
 						</Button>
 					</Toolbar>
 				</AppBar>
