@@ -11,6 +11,7 @@ import {
 import styles from './styles/predictsinglevalue.module.css';
 import { useForm, UseFormRegisterReturn } from 'react-hook-form';
 import { HTMLInputTypeAttribute } from 'react';
+import { Binary, Gender, PredictService } from '@/client';
 
 const DEFAULT_VALUES = {
 	gender: 'Male',
@@ -92,11 +93,26 @@ const DropDown = ({
 
 const PredictSingleValue = () => {
 	const {
+		handleSubmit,
 		register,
 		formState: { errors, defaultValues },
 	} = useForm({
 		defaultValues: { ...DEFAULT_VALUES },
 	});
+
+	const onPredict = async (data: any) => {
+		try {
+			const res =
+				await PredictService.predictSingleValuePredictSingleDatasetPost({
+					requestBody: {
+						...data,
+					},
+				});
+			console.log(res);
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	return (
 		<Grid
@@ -252,6 +268,7 @@ const PredictSingleValue = () => {
 						fontSize: '1.6rem',
 						fontWeight: 700,
 					}}
+					onClick={handleSubmit(onPredict)}
 				>
 					<Typography fontSize={'1.6rem'}>{'Predict'}</Typography>
 				</Button>

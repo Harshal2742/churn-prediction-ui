@@ -6,11 +6,12 @@ import {
 	Typography,
 } from '@mui/material';
 import styles from './authcard.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch } from '@/store';
 import { setUser } from '@/store/user-slice';
 import { useRouter } from 'next/navigation';
+import { AuthService, OpenAPI } from '@/client';
 
 const LoginCard = () => {
 	const [isShowLogin, setIsShowLogin] = useState(true);
@@ -19,7 +20,7 @@ const LoginCard = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, defaultValues },
 		watch,
 	} = useForm({
 		defaultValues: {
@@ -29,19 +30,74 @@ const LoginCard = () => {
 		},
 	});
 
-	const onSubmit = (data: any) => {
-		console.log(data);
-		dispatch(
-			setUser({
-				isAuthenticated: true,
-				user: {
-					email: '',
-					role: '',
-				},
-			})
-		);
+	useEffect(() => {
+		OpenAPI.TOKEN = localStorage.getItem('access_token') ?? '';
+		OpenAPI.BASE = process.env.API_BASE_URL ?? '';
 
-		router.replace('/predict');
+		(async () => {
+			try {
+				const res = await AuthService.getCurrentUserCurrentUserGet();
+				dispatch(
+					setUser({
+						isAuthenticated: true,
+						user: {
+							email: res.email,
+							role: res.role,
+						},
+					})
+				);
+				router.replace('/predict');
+			} catch (e) {
+				console.log(e);
+			}
+		})();
+	}, [dispatch, router]);
+
+	const onSubmit = async (data: typeof defaultValues) => {
+		try {
+			if (isShowLogin) {
+				const res = await AuthService.loginAuthPost({
+					requestBody: {
+						email: data?.email!,
+						password: data?.password!,
+					},
+				});
+				localStorage.setItem('access_token', res.access_token);
+				OpenAPI.TOKEN = res.access_token;
+				dispatch(
+					setUser({
+						isAuthenticated: true,
+						user: {
+							email: res.email,
+							role: res.role,
+						},
+					})
+				);
+				router.replace('/predict');
+			} else {
+				const res = await AuthService.createUserCreateUserPost({
+					requestBody: {
+						email: data?.email!,
+						password: data?.password!,
+						confirm_password: data?.confirm_password!,
+					},
+				});
+				localStorage.setItem('access_token', res.access_token);
+				OpenAPI.TOKEN = res.access_token;
+				dispatch(
+					setUser({
+						isAuthenticated: true,
+						user: {
+							email: res.email,
+							role: res.role,
+						},
+					})
+				);
+				router.replace('/predict');
+			}
+		} catch (e) {
+			console.log(e);
+		}
 	};
 
 	const password = watch('password');

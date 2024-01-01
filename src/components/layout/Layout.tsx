@@ -69,6 +69,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 	}
 
 	const onLogout = () => {
+		localStorage.removeItem('access_token');
 		setMenuOpen(false);
 		dispath(
 			setUser({
@@ -161,9 +162,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 				<Box
 					component={'main'}
 					sx={{
-						width: '100%',
 						backgroundColor: '#171717',
 						height: '100%',
+						position: 'relative',
 					}}
 				>
 					{children}
