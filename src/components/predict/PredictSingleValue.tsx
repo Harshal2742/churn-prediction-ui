@@ -4,14 +4,16 @@ import {
 	FormControl,
 	Grid,
 	MenuItem,
+	Modal,
 	Select,
 	TextField,
 	Typography,
 } from '@mui/material';
 import styles from './styles/predictsinglevalue.module.css';
 import { useForm, UseFormRegisterReturn } from 'react-hook-form';
-import { HTMLInputTypeAttribute } from 'react';
-import { Binary, Gender, PredictService } from '@/client';
+import { HTMLInputTypeAttribute, useEffect, useState } from 'react';
+import { PredictService } from '@/client';
+import { LoadingButton } from '@mui/lab';
 
 const DEFAULT_VALUES = {
 	gender: 'Male',
@@ -100,7 +102,12 @@ const PredictSingleValue = () => {
 		defaultValues: { ...DEFAULT_VALUES },
 	});
 
+	const [isChurn, setIsChurn] = useState<boolean | undefined>(undefined);
+
+	const [isLoading, setIsLoading] = useState(false);
+
 	const onPredict = async (data: any) => {
+		setIsLoading(true);
 		try {
 			const res =
 				await PredictService.predictSingleValuePredictSingleDatasetPost({
@@ -108,16 +115,17 @@ const PredictSingleValue = () => {
 						...data,
 					},
 				});
-			console.log(res);
+			setIsChurn(res.is_chrun);
 		} catch (e) {
 			console.log(e);
 		}
+		setIsLoading(false);
 	};
 
 	return (
 		<Grid
 			sx={{
-				margin: '4rem 10rem',
+				margin: '2rem 10rem',
 				paddingLeft: '2rem',
 				paddingRight: '2rem',
 			}}
@@ -254,14 +262,14 @@ const PredictSingleValue = () => {
 			<Divider />
 			<Grid
 				sx={{
-					marginTop: '2rem',
+					marginTop: '1.4rem',
 					display: 'flex',
 					justifyContent: 'flex-end',
 					paddingLeft: '2rem',
 					paddingRight: '2rem',
 				}}
 			>
-				<Button
+				<LoadingButton
 					variant="contained"
 					sx={{
 						textTransform: 'unset',
@@ -269,10 +277,26 @@ const PredictSingleValue = () => {
 						fontWeight: 700,
 					}}
 					onClick={handleSubmit(onPredict)}
+					loading={isLoading}
 				>
 					<Typography fontSize={'1.6rem'}>{'Predict'}</Typography>
-				</Button>
+				</LoadingButton>
 			</Grid>
+			{!isLoading && isChurn !== undefined && (
+				<Grid
+					sx={{
+						padding: '0.5rem',
+						borderRadius: '0.4rem',
+						margin: '0rem 2rem',
+					}}
+				>
+					<Typography sx={{ fontSize: '1.6rem', color:'#a3e635' }}>
+						{isChurn
+							? 'Customer will terminate service.'
+							: 'Customer will not terminate service.'}
+					</Typography>
+				</Grid>
+			)}
 		</Grid>
 	);
 };

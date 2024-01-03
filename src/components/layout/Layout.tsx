@@ -11,8 +11,6 @@ import {
 	List,
 	ListItem,
 	ListItemButton,
-	Menu,
-	MenuItem,
 	Toolbar,
 	Typography,
 } from '@mui/material';
@@ -20,13 +18,13 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './Layout.module.css';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { setUser } from '@/store/user-slice';
 
 const TABS = [
 	{
 		title: 'Model information',
-		link: '/model-information',
+		link: '/',
 	},
 	{
 		title: 'Predict churn',
@@ -47,16 +45,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 	const [activeTab, setActiveTab] = useState(0);
 	const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
 	const router = useRouter();
-	const [menuOpen, setMenuOpen] = useState(false);
 	const dispath = useAppDispatch();
+	const pathname = usePathname();
 
-	const onProfileClick = () => {
-		setMenuOpen(true);
-	};
-
-	const handelMenuClose = () => {
-		setMenuOpen(false);
-	};
+	useEffect(() => {
+		if (isAuthenticated) {
+			console.log(pathname);
+			const idx = TABS.findIndex((tab) => tab.link.includes(pathname));
+			console.log(idx);
+			setActiveTab(idx);
+		}
+	}, [isAuthenticated, pathname]);
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -70,7 +69,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
 	const onLogout = () => {
 		localStorage.removeItem('access_token');
-		setMenuOpen(false);
 		dispath(
 			setUser({
 				isAuthenticated: false,
@@ -88,7 +86,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 			<Drawer
 				sx={{
 					width: drawerWidth,
-					flexShrink: 0,
 					'& .MuiDrawer-paper': {
 						width: drawerWidth,
 						boxSizing: 'border-box',
@@ -145,8 +142,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 					overflow: 'hidden',
 				}}
 			>
-				<AppBar>
-					<Toolbar sx={{ justifyContent: 'right', position: 'relative' }}>
+				<AppBar sx={{ position: 'relative' }}>
+					<Toolbar sx={{ justifyContent: 'right' }}>
 						<IconButton id="basic-button">
 							<Avatar />
 						</IconButton>

@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_upload_dataset_train_upload_dataset_post } from '../models/Body_upload_dataset_train_upload_dataset_post';
+import type { CurrentModelInformationResponse } from '../models/CurrentModelInformationResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -40,6 +41,18 @@ formData: Body_upload_dataset_train_upload_dataset_post,
             errors: {
                 422: `Validation Error`,
             },
+        });
+    }
+
+    /**
+     * Get Current Model Information
+     * @returns CurrentModelInformationResponse Successful Response
+     * @throws ApiError
+     */
+    public static getCurrentModelInformationTrainCurrentModelInformationGet(): CancelablePromise<CurrentModelInformationResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/train/current-model-information',
         });
     }
 

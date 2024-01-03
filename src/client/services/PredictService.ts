@@ -3,7 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_predict_multiple_value_predict_upload_file_post } from '../models/Body_predict_multiple_value_predict_upload_file_post';
+import type { PredictMultipleValueResult } from '../models/PredictMultipleValueResult';
 import type { PredictSingleValue } from '../models/PredictSingleValue';
+import type { PredictSingleValueResult } from '../models/PredictSingleValueResult';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -13,14 +15,14 @@ export class PredictService {
 
     /**
      * Predict Single Value
-     * @returns any Successful Response
+     * @returns PredictSingleValueResult Successful Response
      * @throws ApiError
      */
     public static predictSingleValuePredictSingleDatasetPost({
 requestBody,
 }: {
 requestBody: PredictSingleValue,
-}): CancelablePromise<any> {
+}): CancelablePromise<PredictSingleValueResult> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/predict/single-dataset',
@@ -34,14 +36,14 @@ requestBody: PredictSingleValue,
 
     /**
      * Predict Multiple Value
-     * @returns any Successful Response
+     * @returns PredictMultipleValueResult Successful Response
      * @throws ApiError
      */
     public static predictMultipleValuePredictUploadFilePost({
 formData,
 }: {
 formData: Body_predict_multiple_value_predict_upload_file_post,
-}): CancelablePromise<any> {
+}): CancelablePromise<PredictMultipleValueResult> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/predict/upload-file',
