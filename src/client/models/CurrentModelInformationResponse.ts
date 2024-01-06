@@ -7,4 +7,7 @@ export type CurrentModelInformationResponse = {
     _id?: (string | null);
     accurancy: number;
     model_name: string;
+    precision: number;
+    recall: number;
+    f_score: number;
 };

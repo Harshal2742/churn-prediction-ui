@@ -1,9 +1,46 @@
 'use client';
 
+import { TrainService } from '@/client';
 import FileUploadInput from '@/components/FileUploadInput';
-import { Grid, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { CircularProgress, Grid, Typography } from '@mui/material';
+import { useState } from 'react';
 
 const TrainModel = () => {
+	const [isLoading, setIsLoading] = useState(false);
+	const [isTraning, setIsTraning] = useState(false);
+	const onFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.currentTarget.files?.[0];
+		if (file) {
+			setIsLoading(true);
+			try {
+				const res = await TrainService.uploadDatasetTrainUploadDatasetPost({
+					formData: {
+						dataset: file,
+					},
+				});
+			} catch (e) {
+				console.log(e);
+			}
+
+			setIsLoading(false);
+		}
+		if (e.currentTarget && e.currentTarget.value) {
+			e.currentTarget.value = '';
+			e.currentTarget.files = null;
+		}
+	};
+
+	const onTrain = async () => {
+		setIsTraning(true);
+		try {
+			const res = await TrainService.trainModelTrainTrainModelGet();
+		} catch (e) {
+			console.log(e);
+		}
+		setIsTraning(false);
+	};
+
 	return (
 		<Grid
 			sx={{
@@ -25,9 +62,33 @@ const TrainModel = () => {
 					the model.
 				</Typography>
 			</Grid>
-			<Grid sx={{ display: 'flex', justifyContent: 'center' }}>
-				<FileUploadInput />
+			<Grid
+				sx={{
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+					gap: '20px',
+				}}
+			>
+				<FileUploadInput onChange={onFileUpload} />
+				<LoadingButton
+					variant={'contained'}
+					sx={{
+						padding: '0.6rem 2.4rem',
+						fontSize: '1.6rem',
+						textTransform: 'capitalize',
+					}}
+					loading={isTraning}
+					onClick={onTrain}
+				>
+					{'Train Model'}
+				</LoadingButton>
 			</Grid>
+			{isLoading && (
+				<Grid sx={{ display: 'flex', justifyContent: 'center' }}>
+					<CircularProgress />
+				</Grid>
+			)}
 		</Grid>
 	);
 };
