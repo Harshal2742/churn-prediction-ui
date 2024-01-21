@@ -32,7 +32,14 @@ const ModelInformation = () => {
 	}, []);
 
 	return modelInfo ? (
-		<Grid sx={{ display: 'flex', flexDirection: 'column', padding: '40px' }}>
+		<Grid
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				padding: '40px',
+				height: '100%',
+			}}
+		>
 			<Grid>
 				<Typography
 					sx={{
@@ -48,74 +55,79 @@ const ModelInformation = () => {
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
-					maxWidth: '40rem',
+					width: '100%',
+					height: '100%',
+					alignItems: 'center',
 				}}
 			>
-				<TableContainer component={Paper} sx={{ maxHeight: '30rem' }}>
-					<Table stickyHeader aria-label="customized table">
+				<TableContainer
+					component={Paper}
+					sx={{ maxHeight: '30rem', maxWidth: '40rem' }}
+				>
+					<Table stickyHeader aria-label='customized table'>
 						<TableBody>
 							<TableRow>
 								<TableCell
 									sx={{ fontSize: '1.6rem' }}
-									component="th"
-									align="center"
-									scope="row"
+									component='th'
+									align='center'
+									scope='row'
 								>
 									{'Model name'}
 								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align="center">
+								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
 									{modelInfo.model_name}
 								</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell
 									sx={{ fontSize: '1.6rem' }}
-									component="th"
-									align="center"
-									scope="row"
+									component='th'
+									align='center'
+									scope='row'
 								>
 									{'Accurancy'}
 								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align="center">
+								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
 									{modelInfo.accurancy * 100}
 								</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell
 									sx={{ fontSize: '1.6rem' }}
-									component="th"
-									align="center"
-									scope="row"
+									component='th'
+									align='center'
+									scope='row'
 								>
 									{'Precision'}
 								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align="center">
+								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
 									{modelInfo.precision * 100}
 								</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell
 									sx={{ fontSize: '1.6rem' }}
-									component="th"
-									align="center"
-									scope="row"
+									component='th'
+									align='center'
+									scope='row'
 								>
 									{'F1 score'}
 								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align="center">
+								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
 									{modelInfo.f_score * 100}
 								</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell
 									sx={{ fontSize: '1.6rem' }}
-									component="th"
-									align="center"
-									scope="row"
+									component='th'
+									align='center'
+									scope='row'
 								>
 									{'Recall'}
 								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align="center">
+								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
 									{modelInfo.recall * 100}
 								</TableCell>
 							</TableRow>
@@ -127,10 +139,11 @@ const ModelInformation = () => {
 	) : (
 		<Grid
 			sx={{
-				flex: 1,
+				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
-				height: '100%',
+				minHeight: '60vh',
+				width: '100%',
 			}}
 		>
 			<CircularProgress />
