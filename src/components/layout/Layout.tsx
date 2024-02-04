@@ -19,7 +19,8 @@ import Link from 'next/link';
 import styles from './Layout.module.css';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { usePathname, useRouter } from 'next/navigation';
-import { setUser } from '@/store/user-slice';
+import { setUser } from '@/store/slice/user-slice';
+import { getAllModels } from '@/store/actions/model';
 
 const TABS = [
 	{
@@ -45,8 +46,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 	const [activeTab, setActiveTab] = useState(0);
 	const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
 	const router = useRouter();
-	const dispath = useAppDispatch();
+	const dispatch = useAppDispatch();
 	const pathname = usePathname();
+	const models = useAppSelector((state) => state.model.allModels);
+
+	useEffect(() => {
+		if ((models === undefined || models.length === 0) && isAuthenticated) {
+			dispatch(getAllModels());
+		}
+	}, [models, dispatch, isAuthenticated]);
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -69,14 +77,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
 	const onLogout = () => {
 		localStorage.removeItem('access_token');
-		dispath(
+		dispatch(
 			setUser({
 				isAuthenticated: false,
 				user: {
 					email: '',
 					role: '',
 				},
-			})
+			}),
 		);
 		router.replace('/auth');
 	};
@@ -91,8 +99,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 						boxSizing: 'border-box',
 					},
 				}}
-				variant="permanent"
-				anchor="left"
+				variant='permanent'
+				anchor='left'
 			>
 				<Toolbar sx={{ backgroundColor: '#262626' }} />
 				<Divider />
@@ -144,11 +152,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 			>
 				<AppBar sx={{ position: 'relative' }}>
 					<Toolbar sx={{ justifyContent: 'right' }}>
-						<IconButton id="basic-button">
+						<IconButton id='basic-button'>
 							<Avatar />
 						</IconButton>
 						<Button
-							variant="outlined"
+							variant='outlined'
 							sx={{ textTransform: 'unset', fontSize: '1.6rem' }}
 							onClick={onLogout}
 						>

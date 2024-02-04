@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_upload_dataset_train_upload_dataset_post } from '../models/Body_upload_dataset_train_upload_dataset_post';
-import type { CurrentModelInformationResponse } from '../models/CurrentModelInformationResponse';
+import type { GetAllModelsInformationResponse } from '../models/GetAllModelsInformationResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -45,14 +45,14 @@ formData: Body_upload_dataset_train_upload_dataset_post,
     }
 
     /**
-     * Get Current Model Information
-     * @returns CurrentModelInformationResponse Successful Response
+     * Get All Models
+     * @returns GetAllModelsInformationResponse Successful Response
      * @throws ApiError
      */
-    public static getCurrentModelInformationTrainCurrentModelInformationGet(): CancelablePromise<CurrentModelInformationResponse> {
+    public static getAllModelsTrainGetAllModelsGet(): CancelablePromise<GetAllModelsInformationResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/train/current-model-information',
+            url: '/train/get-all-models',
         });
     }
 

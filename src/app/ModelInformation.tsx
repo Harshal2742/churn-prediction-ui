@@ -1,9 +1,4 @@
 import {
-	CurrentModelInformationResponse,
-	GetCurrentUserResponse,
-	TrainService,
-} from '@/client';
-import {
 	CircularProgress,
 	Grid,
 	Typography,
@@ -13,25 +8,14 @@ import {
 	Table,
 	TableRow,
 	Paper,
+	TableHead,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useAppSelector } from '@/store';
 
 const ModelInformation = () => {
-	const [modelInfo, setModelInfo] = useState<
-		CurrentModelInformationResponse | undefined
-	>();
+	const models = useAppSelector((state) => state.model.allModels);
 
-	useEffect(() => {
-		(async () => {
-			try {
-				const res =
-					await TrainService.getCurrentModelInformationTrainCurrentModelInformationGet();
-				setModelInfo(res);
-			} catch (e) {}
-		})();
-	}, []);
-
-	return modelInfo ? (
+	return models ? (
 		<Grid
 			sx={{
 				display: 'flex',
@@ -60,77 +44,53 @@ const ModelInformation = () => {
 					alignItems: 'center',
 				}}
 			>
-				<TableContainer
-					component={Paper}
-					sx={{ maxHeight: '30rem', maxWidth: '40rem' }}
-				>
+				<TableContainer component={Paper}>
 					<Table stickyHeader aria-label='customized table'>
+						<TableHead>
+							<TableRow>
+								{[
+									'Sr No.',
+									'Model Name',
+									'Accurancy',
+									'Precision',
+									'Recall',
+									'F1 Score',
+								].map((title, index) => (
+									<TableCell
+										key={index}
+										sx={{ fontSize: '1.6rem' }}
+										component='th'
+										align='center'
+										scope='row'
+									>
+										{title}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
 						<TableBody>
-							<TableRow>
-								<TableCell
-									sx={{ fontSize: '1.6rem' }}
-									component='th'
-									align='center'
-									scope='row'
-								>
-									{'Model name'}
-								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
-									{modelInfo.model_name}
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell
-									sx={{ fontSize: '1.6rem' }}
-									component='th'
-									align='center'
-									scope='row'
-								>
-									{'Accurancy'}
-								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
-									{modelInfo.accurancy * 100}
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell
-									sx={{ fontSize: '1.6rem' }}
-									component='th'
-									align='center'
-									scope='row'
-								>
-									{'Precision'}
-								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
-									{modelInfo.precision * 100}
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell
-									sx={{ fontSize: '1.6rem' }}
-									component='th'
-									align='center'
-									scope='row'
-								>
-									{'F1 score'}
-								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
-									{modelInfo.f_score * 100}
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell
-									sx={{ fontSize: '1.6rem' }}
-									component='th'
-									align='center'
-									scope='row'
-								>
-									{'Recall'}
-								</TableCell>
-								<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
-									{modelInfo.recall * 100}
-								</TableCell>
-							</TableRow>
+							{models.map((model, index) => (
+								<TableRow key={model.id}>
+									<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
+										{index + 1}
+									</TableCell>
+									<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
+										{model.model_name}
+									</TableCell>
+									<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
+										{model.accurancy}
+									</TableCell>
+									<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
+										{model.precision}
+									</TableCell>
+									<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
+										{model.recall}
+									</TableCell>
+									<TableCell sx={{ fontSize: '1.6rem' }} align='center'>
+										{model.f_score}
+									</TableCell>
+								</TableRow>
+							))}
 						</TableBody>
 					</Table>
 				</TableContainer>

@@ -9,7 +9,7 @@ import styles from './authcard.module.css';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch } from '@/store';
-import { setUser } from '@/store/user-slice';
+import { setUser } from '@/store/slice/user-slice';
 import { useRouter } from 'next/navigation';
 import { AuthService, OpenAPI } from '@/client';
 

@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type CurrentModelInformationResponse = {
-    _id?: (string | null);
+export type ModelInformation = {
+    id?: (string | null);
     accurancy: number;
     model_name: string;
     precision: number;
