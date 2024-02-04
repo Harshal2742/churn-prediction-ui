@@ -2,6 +2,8 @@
 
 import { TrainService } from '@/client';
 import FileUploadInput from '@/components/FileUploadInput';
+import { useAppDispatch } from '@/store';
+import { getAllModels } from '@/store/actions/model';
 import { LoadingButton } from '@mui/lab';
 import { CircularProgress, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -9,6 +11,7 @@ import { useState } from 'react';
 const TrainModel = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isTraning, setIsTraning] = useState(false);
+	const dispatch = useAppDispatch();
 	const onFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.currentTarget.files?.[0];
 		if (file) {
@@ -35,6 +38,7 @@ const TrainModel = () => {
 		setIsTraning(true);
 		try {
 			const res = await TrainService.trainModelTrainTrainModelGet();
+			await dispatch(getAllModels());
 		} catch (e) {
 			console.log(e);
 		}

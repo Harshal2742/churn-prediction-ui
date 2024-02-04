@@ -4,6 +4,7 @@ import {
 	Avatar,
 	Box,
 	Button,
+	CircularProgress,
 	Divider,
 	Drawer,
 	Grid,
@@ -89,7 +90,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 		router.replace('/auth');
 	};
 
-	return (
+	return models ? (
 		<Box display={'flex'} overflow={'hidden'}>
 			<Drawer
 				sx={{
@@ -175,6 +176,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 					{children}
 				</Box>
 			</Grid>
+		</Box>
+	) : (
+		<Box
+			sx={{
+				flexGrow: 1,
+				height: '100vh',
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}
+		>
+			<CircularProgress />
 		</Box>
 	);
 };

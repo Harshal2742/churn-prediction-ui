@@ -1,10 +1,8 @@
 import {
-	Button,
 	Divider,
 	FormControl,
 	Grid,
 	MenuItem,
-	Modal,
 	Select,
 	TextField,
 	Typography,
@@ -14,6 +12,7 @@ import { useForm, UseFormRegisterReturn } from 'react-hook-form';
 import { HTMLInputTypeAttribute, useEffect, useState } from 'react';
 import { PredictService } from '@/client';
 import { LoadingButton } from '@mui/lab';
+import { useAppSelector } from '@/store';
 
 const DEFAULT_VALUES = {
 	gender: 'Male',
@@ -103,17 +102,23 @@ const PredictSingleValue = () => {
 	});
 
 	const [isChurn, setIsChurn] = useState<boolean | undefined>(undefined);
+	const models = useAppSelector((state) => state.model.allModels);
+	const [selectedModel, setSelectedModel] = useState(models?.[0].id);
 
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onPredict = async (data: any) => {
 		setIsLoading(true);
+		if (!selectedModel) {
+			return;
+		}
 		try {
 			const res =
 				await PredictService.predictSingleValuePredictSingleDatasetPost({
 					requestBody: {
 						...data,
 					},
+					selectedModelId: selectedModel,
 				});
 			setIsChurn(res.is_chrun);
 		} catch (e) {
@@ -264,13 +269,29 @@ const PredictSingleValue = () => {
 				sx={{
 					marginTop: '1.4rem',
 					display: 'flex',
-					justifyContent: 'flex-end',
+					justifyContent: 'space-between',
 					paddingLeft: '2rem',
 					paddingRight: '2rem',
 				}}
 			>
+				{models && models.length > 0 && (
+					<Select
+						value={selectedModel}
+						onChange={(e) => setSelectedModel(e.target.value)}
+					>
+						{models.map((model, index) => (
+							<MenuItem
+								className={styles.dropdownListItem}
+								key={model.id}
+								value={model.id || index}
+							>
+								<Typography>{model.model_name}</Typography>
+							</MenuItem>
+						))}
+					</Select>
+				)}
 				<LoadingButton
-					variant="contained"
+					variant='contained'
 					sx={{
 						textTransform: 'unset',
 						fontSize: '1.6rem',
@@ -290,7 +311,7 @@ const PredictSingleValue = () => {
 						margin: '0rem 2rem',
 					}}
 				>
-					<Typography sx={{ fontSize: '1.6rem', color:'#a3e635' }}>
+					<Typography sx={{ fontSize: '1.6rem', color: '#a3e635' }}>
 						{isChurn
 							? 'Customer will terminate service.'
 							: 'Customer will not terminate service.'}

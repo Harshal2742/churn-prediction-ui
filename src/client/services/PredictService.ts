@@ -19,13 +19,18 @@ export class PredictService {
      * @throws ApiError
      */
     public static predictSingleValuePredictSingleDatasetPost({
+selectedModelId,
 requestBody,
 }: {
+selectedModelId: string,
 requestBody: PredictSingleValue,
 }): CancelablePromise<PredictSingleValueResult> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/predict/single-dataset',
+            query: {
+                'selected_model_id': selectedModelId,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -40,13 +45,18 @@ requestBody: PredictSingleValue,
      * @throws ApiError
      */
     public static predictMultipleValuePredictUploadFilePost({
+selectedModelId,
 formData,
 }: {
+selectedModelId: string,
 formData: Body_predict_multiple_value_predict_upload_file_post,
 }): CancelablePromise<PredictMultipleValueResult> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/predict/upload-file',
+            query: {
+                'selected_model_id': selectedModelId,
+            },
             formData: formData,
             mediaType: 'multipart/form-data',
             errors: {
