@@ -285,7 +285,9 @@ const PredictSingleValue = () => {
 								key={model.id}
 								value={model.id || index}
 							>
-								<Typography>{model.model_name}</Typography>
+								<Typography fontSize={'1.4rem !important'}>
+									{model.model_name}
+								</Typography>
 							</MenuItem>
 						))}
 					</Select>
